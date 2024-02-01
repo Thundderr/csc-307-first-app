@@ -6,28 +6,23 @@ function MyApp() {
     const [characters, setCharacters] = useState([]);
 
     function removeOneCharacter(index) {
-        const updated = characters.filter((character, i) => {
-        return i !== index;
-        });
-        setCharacters(updated);
+        const user = characters[index];
+        if (user !== undefined && user.id !== undefined) {
+          const url = `http://localhost:8000/users/${user.id}`;
+          fetch(url, { method: 'DELETE' })
+          .then(response => {
+            if (response.status === 204) {
+              const updated = characters.filter((character, i) => i !== index);
+              setCharacters(updated);
+            } else if (response.status === 404) {
+              console.error('Resrouce not found');
+            }
+          })
+          .catch(error => {
+            console.error('Failed to delete user:', error);
+          });
+        }
     }
-
-    // function updateList(person) {
-    //   postUser(person)
-    //       .then(response => {
-    //           if (response.status === 201) {
-    //               return response.json();
-    //           } else {
-    //               throw new Error('No user creation - wrong response');
-    //           }
-    //       })
-    //       .then(person => {
-    //           setCharacters([...characters, person])
-    //       })
-    //       .catch((error) => {
-    //           console.log(error);
-    //       });
-    // }
 
     function updateList(person) { 
       postUser(person)
@@ -52,7 +47,7 @@ function MyApp() {
       })
       .then(response => {
         if (response.status === 201) {
-          return response.json(); // Return the promise resolving with added user data
+          return response.json();
         } else {
           throw new Error('Failed to create user');
         }

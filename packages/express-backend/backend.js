@@ -63,7 +63,7 @@ res.send("Hello World!");
 });
 
 app.get("/users/:id", (req, res) => {
-    const id = req.params["id"]; //or req.params.id
+    const id = req.params["id"];
     let result = findUserById(id);
     if (result === undefined) {
     res.status(404).send("Resource not found.");
@@ -92,7 +92,9 @@ app.post("/users", (req, res) => {
 
 app.delete("/users/:id", (req, res) => {
     const id = req.params["id"];
+    console.log(id)
     const index = users["users_list"].findIndex(user => user.id === id);
+    console.log(index);
     if (index === -1) {
         res.status(404).send("Resource not found.");
     } else {
