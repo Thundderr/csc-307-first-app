@@ -12,9 +12,26 @@ function MyApp() {
         setCharacters(updated);
     }
 
+    // function updateList(person) {
+    //   postUser(person)
+    //       .then(response => {
+    //           if (response.status === 201) {
+    //               return response.json();
+    //           } else {
+    //               throw new Error('No user creation - wrong response');
+    //           }
+    //       })
+    //       .then(person => {
+    //           setCharacters([...characters, person])
+    //       })
+    //       .catch((error) => {
+    //           console.log(error);
+    //       });
+    // }
+
     function updateList(person) { 
       postUser(person)
-        .then(() => setCharacters([...characters, person]))
+        .then((addedUser) => setCharacters([...characters, addedUser]))
         .catch((error) => {
           console.log(error);
         })
@@ -32,6 +49,13 @@ function MyApp() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(person),
+      })
+      .then(response => {
+        if (response.status === 201) {
+          return response.json(); // Return the promise resolving with added user data
+        } else {
+          throw new Error('Failed to create user');
+        }
       });
   
       return promise;
